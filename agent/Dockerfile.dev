@@ -1,0 +1,27 @@
+# Development Dockerfile for LiveKit Agent
+FROM node:20-alpine
+
+# Install necessary dependencies
+RUN apk add --no-cache python3 make g++
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json ./
+RUN npm ci --include=dev
+
+# Copy the entire agent directory
+COPY agent/ ./agent/
+
+# Copy tsconfig from parent
+COPY tsconfig.json ./
+
+# Download model files
+RUN npx tsx agent/agent.ts download-files
+
+# Set environment
+ENV NODE_ENV=development
+
+# Run the agent in dev mode
+CMD ["npx", "tsx", "agent/agent.ts", "dev"]
+

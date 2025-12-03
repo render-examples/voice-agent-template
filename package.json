@@ -1,0 +1,44 @@
+{
+  "name": "render-voice-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "agent:download": "tsx agent/agent.ts download-files",
+    "agent:dev": "tsx agent/agent.ts dev",
+    "agent:build": "tsx agent/agent.ts build",
+    "agent:start": "tsx agent/agent.ts start"
+  },
+  "dependencies": {
+    "@livekit/agents": "^1.0.17",
+    "@livekit/agents-plugin-livekit": "^1.0.17",
+    "@livekit/agents-plugin-rime": "^1.0.10",
+    "@livekit/components-react": "^2.9.15",
+    "@livekit/components-styles": "^1.1.6",
+    "@livekit/noise-cancellation-node": "^0.1.9",
+    "clsx": "^2.1.1",
+    "livekit-client": "^2.15.15",
+    "livekit-server-sdk": "^2.14.0",
+    "next": "16.0.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "tailwind-merge": "^2.5.5"
+  },
+  "devDependencies": {
+    "@livekit/agents-plugin-silero": "^1.0.17",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.1",
+    "tailwindcss": "^4",
+    "tsx": "^4.20.6",
+    "typescript": "^5"
+  }
+}

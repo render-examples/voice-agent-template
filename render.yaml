@@ -1,0 +1,63 @@
+projects:
+  - name: render-voice-agent-example
+    environments:
+      - name: production
+        services:
+          # Next.js Web Application
+          - type: web
+            name: voice-agent-app
+            runtime: docker
+            plan: standard
+            region: oregon
+            
+            # Use the root Dockerfile for the Next.js app
+            dockerfilePath: ./Dockerfile
+            
+            # Environment variables for the Next.js app
+            envVars:
+              - key: NODE_ENV
+                value: production
+              - key: LIVEKIT_API_KEY
+                sync: false
+              - key: LIVEKIT_API_SECRET
+                sync: false
+              - key: LIVEKIT_URL
+                sync: false
+              - key: NEXT_PUBLIC_LIVEKIT_URL
+                sync: false
+            
+            # Health check endpoint
+            healthCheckPath: /
+            
+            # Auto-deploy from main branch
+            autoDeploy: true
+
+          # LiveKit Voice Agent (Private Service)
+          - type: pserv
+            name: voice-agent-worker
+            runtime: docker
+            plan: standard
+            region: oregon
+            
+            # Use the agent Dockerfile
+            dockerfilePath: ./agent/Dockerfile
+            dockerContext: .
+            
+            # Environment variables for the agent
+            # Create an environment variable group in Render dashboard
+            # with these keys and add them to: voice-agent-env
+            envVars:
+              - key: NODE_ENV
+                value: production
+              - key: LIVEKIT_API_KEY
+                sync: false
+              - key: LIVEKIT_API_SECRET
+                sync: false
+              - key: LIVEKIT_URL
+                sync: false
+              - key: RIME_API_KEY
+                sync: false
+            
+            # Auto-deploy from main branch
+            autoDeploy: true
+
