@@ -55,12 +55,12 @@ export default defineAgent({
   },
   entry: async (ctx: JobContext) => {
     console.log('Starting new agent session');
-    
+
     // Track resources for cleanup
     let session: voice.AgentSession | null = null;
     let usageCollector: metrics.UsageCollector | null = null;
     let metricsHandler: ((ev: any) => void) | null = null;
-    
+
     try {
       // Set up a voice AI pipeline using OpenAI, Cartesia, AssemblyAI, and the LiveKit turn detector
       session = new voice.AgentSession({
@@ -74,7 +74,7 @@ export default defineAgent({
         // A Large Language Model (LLM) is your agent's brain, processing user input and generating a response
         // See all providers at https://docs.livekit.io/agents/models/llm/
         llm: new inference.LLM({
-          model: 'openai/gpt-4.1-mini',
+          model: 'openai/gpt-5.2',
         }),
 
         // Text-to-speech (TTS) is your agent's voice, turning the LLM's text into speech that the user can hear
@@ -103,13 +103,13 @@ export default defineAgent({
       // Metrics collection, to measure pipeline performance
       // For more information, see https://docs.livekit.io/agents/build/metrics/
       usageCollector = new metrics.UsageCollector();
-      
+
       // Store the handler so we can remove it later
       metricsHandler = (ev: any) => {
         metrics.logMetrics(ev.metrics);
         usageCollector?.collect(ev.metrics);
       };
-      
+
       session.on(voice.AgentSessionEventTypes.MetricsCollected, metricsHandler);
 
       const logUsage = async () => {
@@ -123,12 +123,12 @@ export default defineAgent({
       ctx.addShutdownCallback(async () => {
         console.log('Shutting down agent session');
         await logUsage();
-        
+
         // Clean up event listener
         if (session && metricsHandler) {
           session.off(voice.AgentSessionEventTypes.MetricsCollected, metricsHandler);
         }
-        
+
         // Close the session
         if (session) {
           try {
@@ -137,7 +137,7 @@ export default defineAgent({
             console.error('Error closing session:', error);
           }
         }
-        
+
         // Clear references to allow garbage collection
         session = null;
         usageCollector = null;
@@ -158,11 +158,11 @@ export default defineAgent({
 
       // Join the room and connect to the user
       await ctx.connect();
-      
+
       console.log('Agent session started successfully');
     } catch (error) {
       console.error('Error in agent entry:', error);
-      
+
       // Ensure cleanup happens even on error
       if (session && metricsHandler) {
         try {
@@ -171,7 +171,7 @@ export default defineAgent({
           console.error('Error removing event listener:', cleanupError);
         }
       }
-      
+
       if (session) {
         try {
           await session.close();
@@ -179,12 +179,12 @@ export default defineAgent({
           console.error('Error closing session on error:', cleanupError);
         }
       }
-      
+
       // Clear references
       session = null;
       usageCollector = null;
       metricsHandler = null;
-      
+
       throw error;
     }
   },

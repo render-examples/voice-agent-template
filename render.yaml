@@ -9,10 +9,10 @@ projects:
             runtime: docker
             plan: standard
             region: oregon
-            
+
             # Use the root Dockerfile for the Next.js app
             dockerfilePath: ./Dockerfile
-            
+
             # Environment variables for the Next.js app
             envVars:
               - key: NODE_ENV
@@ -25,10 +25,10 @@ projects:
                 sync: false
               - key: NEXT_PUBLIC_LIVEKIT_URL
                 sync: false
-            
+
             # Health check endpoint
             healthCheckPath: /
-            
+
             # Auto-deploy from main branch
             autoDeploy: true
 
@@ -38,14 +38,14 @@ projects:
             runtime: docker
             plan: standard
             region: oregon
-            
+
             # Use the agent Dockerfile
             dockerfilePath: ./agent/Dockerfile
             dockerContext: .
-            
+
             # Environment variables for the agent
-            # Create an environment variable group in Render dashboard
-            # with these keys and add them to: voice-agent-env
+            # LLM and STT use LiveKit Inference (billed via LiveKit Cloud); no OpenAI or AssemblyAI keys required.
+            # Only add OPENAI_API_KEY or ASSEMBLYAI_API_KEY if you switch to the provider plugins.
             envVars:
               - key: NODE_ENV
                 value: production
@@ -57,7 +57,6 @@ projects:
                 sync: false
               - key: RIME_API_KEY
                 sync: false
-            
+
             # Auto-deploy from main branch
             autoDeploy: true
-
