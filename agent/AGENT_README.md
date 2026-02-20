@@ -5,8 +5,8 @@ This project includes a LiveKit voice agent that uses the Rime TTS plugin for hi
 ## Architecture
 
 The agent uses a **STT-LLM-TTS pipeline**:
-- **STT (Speech-to-Text)**: AssemblyAI Universal-Streaming
-- **LLM (Language Model)**: OpenAI GPT-4.1 mini (via LiveKit Inference)
+- **STT (Speech-to-Text)**: via LiveKit Inference
+- **LLM (Language Model)**: via LiveKit Inference
 - **TTS (Text-to-Speech)**: Rime TTS with the `mistv2` model and `rainforest` voice
 - **VAD (Voice Activity Detection)**: Silero VAD
 - **Turn Detection**: LiveKit Multilingual Turn Detector
@@ -195,8 +195,8 @@ Alternatively, you can use Rime through LiveKit Inference (which handles billing
 ```typescript
 const session = new voice.AgentSession({
   vad,
-  stt: "assemblyai/universal-streaming:en",
-  llm: "openai/gpt-4.1-mini",
+  stt: "assemblyai/universal-streaming:en",  // via LiveKit Inference
+  llm: "openai/gpt-4.1-mini",               // via LiveKit Inference
   tts: "rime/arcana:astra", // Use LiveKit Inference
   turnDetection: new livekit.turnDetector.MultilingualModel(),
 });

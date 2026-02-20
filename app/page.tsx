@@ -36,7 +36,7 @@ export default function Home() {
             </span>
             , and{" "}
             <span className="font-semibold text-primary">
-              OpenAI
+              LiveKit Inference
             </span>
           </p>
         </div>
@@ -69,12 +69,12 @@ export default function Home() {
             </a>
             {" • "}
             <a
-              href="https://openai.com"
+              href="https://docs.livekit.io/agents/models/"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-primary hover:underline"
             >
-              OpenAI
+              LiveKit Inference
             </a>
           </p>
           <p>
