@@ -1,6 +1,6 @@
 # LiveKit Voice Agent with Next.js
 
-A full-stack voice AI application built with [LiveKit Agents](https://docs.livekit.io/agents), [Next.js](https://nextjs.org), and [Rime TTS](https://rime.ai/). Real-time voice conversations powered by GPT-5.2, with high-quality TTS and advanced speech recognition.
+A full-stack voice AI application built with [LiveKit Agents](https://docs.livekit.io/agents), [Next.js](https://nextjs.org), and [Rime TTS](https://rime.ai/). Real-time voice conversations with high-quality TTS and advanced speech recognition, all powered by LiveKit Inference.
 
 **Deploy to production on [Render](https://render.com) with auto-scaling. Develop locally with Docker.**
 
@@ -43,7 +43,7 @@ This project is pre-configured for production deployment to [Render](https://ren
      - `LIVEKIT_API_SECRET` - Your LiveKit API secret
      - `LIVEKIT_URL` - Your LiveKit WebSocket URL
      - `RIME_API_KEY` - Get from [Rime.ai](https://rime.ai/)
-     - *(LLM and STT use LiveKit Inference—billed via LiveKit Cloud—so OpenAI and AssemblyAI keys are not required.)*
+     - *(LLM and STT are handled by LiveKit Inference, billed through LiveKit Cloud. No additional API keys needed.)*
 
 4. **Create a new Blueprint Instance on Render:**
    - Click "New" → "Blueprint Instance"
@@ -71,9 +71,9 @@ On Render, use the **Standard plan or higher** for the agent worker service. The
 ## ✨ Features
 
 - 🎙️ **Real-time Voice Conversations** - Natural voice interactions powered by LiveKit
-- 🧠 **Smart AI Agent** - Uses GPT-5.2 for intelligent responses
+- 🧠 **Smart AI Agent** - Intelligent responses via LiveKit Inference
 - 🗣️ **High-Quality TTS** - Rime TTS with multiple voice options
-- 🎧 **Advanced STT** - AssemblyAI for accurate speech recognition
+- 🎧 **Advanced STT** - Accurate speech recognition via LiveKit Inference
 - 🔇 **Noise Cancellation** - Built-in background noise reduction
 - 🚀 **Production-Ready Deployment** - Pre-configured for Render with auto-scaling and Docker
 
@@ -82,7 +82,7 @@ On Render, use the **Standard plan or higher** for the agent worker service. The
 ```
 render-voice-agent/
 ├── agent/                  # LiveKit voice agent
-│   ├── agent.ts            # Agent implementation (GPT-5.2 + Rime + AssemblyAI via LiveKit Inference)
+│   ├── agent.ts            # Agent implementation (LLM + STT + TTS via LiveKit Inference)
 │   ├── AGENT_README.md    # Agent configuration and customization
 │   ├── Dockerfile         # Production agent container
 │   └── Dockerfile.dev     # Development agent container
@@ -105,7 +105,7 @@ render-voice-agent/
 - **At least 8 GB of RAM** available for the agent (for AI model loading)
 - Node.js 20 or higher (optional, for running without Docker)
 - LiveKit Cloud account ([sign up](https://cloud.livekit.io/))
-- Rime API key for TTS (LLM and STT use LiveKit Inference; no OpenAI or AssemblyAI keys needed)
+- Rime API key for TTS (LLM and STT use LiveKit Inference)
 
 **Local setup:**
 
@@ -232,8 +232,8 @@ instructions: `You are a friendly and helpful voice assistant...`
 **Agent:**
 - **LiveKit Agents** - Voice agent framework
 - **Rime TTS** - Text-to-speech
-- **OpenAI GPT-5.2** (via LiveKit Inference) - Language model
-- **AssemblyAI** (via LiveKit Inference) - Speech-to-text
+- **LLM** (via LiveKit Inference) - Language model
+- **STT** (via LiveKit Inference) - Speech-to-text
 - **Silero VAD** - Voice activity detection
 
 **Infrastructure:**
@@ -255,16 +255,14 @@ LIVEKIT_URL=wss://...
 # Required for TTS (Rime)
 RIME_API_KEY=...          # Get from https://rime.ai/
 
-# Optional: only if you switch from LiveKit Inference to provider plugins
-# OPENAI_API_KEY=...     # For OpenAI plugin (LLM)
-# ASSEMBLYAI_API_KEY=... # For AssemblyAI plugin (STT)
+# LLM and STT are handled by LiveKit Inference — no additional API keys needed.
 ```
 
 ## 🐛 Troubleshooting
 
 **1. Agent won't start:**
 ```bash
-# Ensure LiveKit and Rime keys are set (OpenAI/AssemblyAI optional when using LiveKit Inference)
+# Ensure LiveKit and Rime keys are set
 cat .env
 
 # Download model files

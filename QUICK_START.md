@@ -6,7 +6,7 @@ Get your voice agent up and running locally in 5 minutes with Docker!
 
 - **Docker Desktop** installed ([download here](https://www.docker.com/products/docker-desktop))
 - **LiveKit Cloud account** (free at https://cloud.livekit.io)
-- **Rime API key** from https://rime.ai/ (required for TTS). LLM and STT use LiveKit Inference (billed via LiveKit Cloud), so OpenAI and AssemblyAI keys are not required.
+- **Rime API key** from https://rime.ai/ (required for TTS). LLM and STT use LiveKit Inference, billed through LiveKit Cloud.
 
 ## Step-by-Step Setup
 
@@ -56,7 +56,7 @@ NEXT_PUBLIC_LIVEKIT_URL=wss://your-project.livekit.cloud
 
 # Required for TTS
 RIME_API_KEY=your_rime_api_key_here
-# (LLM and STT use LiveKit Inference; no OpenAI or AssemblyAI keys needed)
+# LLM and STT are handled by LiveKit Inference — no additional API keys needed.
 ```
 
 💡 **Important**: Make sure `NEXT_PUBLIC_LIVEKIT_URL` matches your `LIVEKIT_URL`!
@@ -239,8 +239,8 @@ When running locally with Docker Compose, two services work together:
 │  │                  │      │  Connects to:    │   │
 │  │  Next.js + React │      │  - LiveKit Cloud │   │
 │  │  Voice Interface │◄─────┤  - Rime TTS      │   │
-│  │                  │      │  - OpenAI GPT    │   │
-│  └──────────────────┘      │  - AssemblyAI    │   │
+│  │                  │      │  - LLM (LiveKit) │   │
+│  └──────────────────┘      │  - STT (LiveKit) │   │
 │                            └──────────────────┘   │
 └─────────────────────────────────────────────────────┘
          ↕                           ↕

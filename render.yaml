@@ -44,8 +44,7 @@ projects:
             dockerContext: .
 
             # Environment variables for the agent
-            # LLM and STT use LiveKit Inference (billed via LiveKit Cloud); no OpenAI or AssemblyAI keys required.
-            # Only add OPENAI_API_KEY or ASSEMBLYAI_API_KEY if you switch to the provider plugins.
+            # LLM and STT use LiveKit Inference (billed via LiveKit Cloud). No additional API keys needed.
             envVars:
               - key: NODE_ENV
                 value: production

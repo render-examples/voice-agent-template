@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "AI Voice Assistant | Powered by LiveKit",
-  description: "Real-time AI voice conversation powered by LiveKit Agents, Rime TTS, and OpenAI",
+  description: "Real-time AI voice conversation powered by LiveKit Agents, Rime TTS, and LiveKit Inference",
 };
 
 export default function RootLayout({

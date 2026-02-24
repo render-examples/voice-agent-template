@@ -113,6 +113,11 @@ export default function VoiceAgent({ roomName = 'voice-agent-room' }: VoiceAgent
     setError('');
 
     try {
+      // Acquire mic permission while the user-gesture is still active;
+      // LiveKit will open its own stream later so we release this one immediately.
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      for (const t of stream.getTracks()) t.stop();
+
       const participantName = `user-${Math.floor(Math.random() * 10000)}`;
       const response = await fetch(
         `/api/token?roomName=${encodeURIComponent(roomName)}&participantName=${encodeURIComponent(participantName)}`
@@ -127,10 +132,15 @@ export default function VoiceAgent({ roomName = 'voice-agent-room' }: VoiceAgent
       setToken(data.token);
       setIsConnecting(false);
       setIsConnected(true);
-      // Delay rendering to ensure clean mount
       setTimeout(() => setCanRender(true), 200);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to connect');
+      const message =
+        err instanceof DOMException && err.name === 'NotAllowedError'
+          ? 'Microphone access denied. Please allow microphone permission and try again.'
+          : err instanceof Error
+            ? err.message
+            : 'Failed to connect';
+      setError(message);
       setIsConnecting(false);
     }
   }, [roomName, isConnecting, isConnected]);

@@ -10,12 +10,21 @@ import {
 } from '@livekit/agents';
 import * as livekit from '@livekit/agents-plugin-livekit';
 import * as silero from '@livekit/agents-plugin-silero';
-import { BackgroundVoiceCancellation } from '@livekit/noise-cancellation-node';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'node:url';
-import {TTS} from '@livekit/agents-plugin-rime';
+import { TTS } from '@livekit/agents-plugin-rime';
 
 dotenv.config({ path: '.env' });
+
+async function loadNoiseCancellation() {
+  try {
+    const mod = await import('@livekit/noise-cancellation-node');
+    return mod.BackgroundVoiceCancellation();
+  } catch {
+    console.warn('Noise cancellation unavailable — running without it');
+    return undefined;
+  }
+}
 
 class Assistant extends voice.Agent {
   constructor() {
@@ -62,7 +71,7 @@ export default defineAgent({
     let metricsHandler: ((ev: any) => void) | null = null;
 
     try {
-      // Set up a voice AI pipeline using OpenAI, Cartesia, AssemblyAI, and the LiveKit turn detector
+      // Set up a voice AI pipeline via LiveKit Inference (STT, LLM, TTS) and the LiveKit turn detector
       session = new voice.AgentSession({
         // Speech-to-text (STT) is your agent's ears, turning the user's speech into text that the LLM can understand
         // See all available models at https://docs.livekit.io/agents/models/stt/
@@ -89,16 +98,6 @@ export default defineAgent({
         turnDetection: new livekit.turnDetector.MultilingualModel(),
         vad: ctx.proc.userData.vad! as silero.VAD,
       });
-
-      // To use a realtime model instead of a voice pipeline, use the following session setup instead.
-      // (Note: This is for the OpenAI Realtime API. For other providers, see https://docs.livekit.io/agents/models/realtime/))
-      // 1. Install '@livekit/agents-plugin-openai'
-      // 2. Set OPENAI_API_KEY in .env
-      // 3. Add import `import * as openai from '@livekit/agents-plugin-openai'` to the top of this file
-      // 4. Use the following session setup instead of the version above
-      // const session = new voice.AgentSession({
-      //   llm: new openai.realtime.RealtimeModel({ voice: 'marin' }),
-      // });
 
       // Metrics collection, to measure pipeline performance
       // For more information, see https://docs.livekit.io/agents/build/metrics/
@@ -144,7 +143,12 @@ export default defineAgent({
         metricsHandler = null;
       });
 
-      // Start the session, which initializes the voice pipeline and warms up the models
+      // Join the room first so the agent can see participants
+      await ctx.connect();
+
+      const noiseCancellation = await loadNoiseCancellation();
+
+      // Start the voice pipeline session
       await session.start({
         agent: new Assistant(),
         room: ctx.room,
@@ -152,12 +156,9 @@ export default defineAgent({
           // LiveKit Cloud enhanced noise cancellation
           // - If self-hosting, omit this parameter
           // - For telephony applications, use `BackgroundVoiceCancellationTelephony` for best results
-          noiseCancellation: BackgroundVoiceCancellation(),
+          ...(noiseCancellation && { noiseCancellation }),
         },
       });
-
-      // Join the room and connect to the user
-      await ctx.connect();
 
       console.log('Agent session started successfully');
     } catch (error) {

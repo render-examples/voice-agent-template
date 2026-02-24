@@ -45,3 +45,6 @@ next-env.d.ts
 KMS/
 *.onnx
 *.bin
+
+# Render local dev environment
+.render/
